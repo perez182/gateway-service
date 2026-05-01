@@ -1,0 +1,27 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: order-management-service-route
+          uri: http://order-management-service:8084 # Nombre del servicio en el compose
+          predicates:
+            - Path=/api/v1/order-management/**
+          filters:
+            - StripPrefix=2
+            - AddRequestHeader=X-Layer, Process-API
+
+        - id: customer-service-route
+          uri: http://customer-service:8082
+          predicates:
+            - Path=/api/v1/customers/**
+          filters:
+            - StripPrefix=2
+            - AddRequestHeader=X-Layer, System-API
+
+        - id: order-service-route
+          uri: http://order-service:8083
+          predicates:
+            - Path=/api/v1/orders/**
+          filters:
+            - StripPrefix=2
+            - AddRequestHeader=X-Layer, System-API
